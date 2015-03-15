@@ -65,7 +65,7 @@ namespace Kfstorm.PingTool
                 }
                 _ds = new ObservableDataSource<PingResult>();
                 _ping.PingTick += PingOnPingTick;
-                _ping.PingException += PingOnPingException;
+                //_ping.PingException += PingOnPingException;
                 _ds.SetXMapping(item => dateAxis.ConvertToDouble(item.DateTime));
                 _ds.SetYMapping(item => item.TimeCost.TotalMilliseconds);
                 _plotterChildren = new IPlotterElement[]
@@ -91,45 +91,45 @@ namespace Kfstorm.PingTool
             pnSettings.IsEnabled = false;
         }
 
-        private void PingOnPingException(object sender, PingExceptionEventArgs pingExceptionEventArgs)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                var sb = new StringBuilder();
-                var ex = pingExceptionEventArgs.Exception;
-                while (ex != null)
-                {
-                    sb.AppendLine(ex.Message);
-                    ex = ex.InnerException;
-                }
-                if (sb.Length == 0)
-                {
-                    sb.AppendLine("Unknown error occurred.");
-                }
-                sb.AppendLine("Would you like to retry ?");
+        //private void PingOnPingException(object sender, PingExceptionEventArgs pingExceptionEventArgs)
+        //{
+        //    Dispatcher.Invoke(() =>
+        //    {
+        //        var sb = new StringBuilder();
+        //        var ex = pingExceptionEventArgs.Exception;
+        //        while (ex != null)
+        //        {
+        //            sb.AppendLine(ex.Message);
+        //            ex = ex.InnerException;
+        //        }
+        //        if (sb.Length == 0)
+        //        {
+        //            sb.AppendLine("Unknown error occurred.");
+        //        }
+        //        sb.AppendLine("Would you like to retry ?");
 
-                if (MessageBox.Show(sb.ToString(), "Ping failed", MessageBoxButton.YesNo, MessageBoxImage.Warning) ==
-                    MessageBoxResult.No)
-                {
-                    pingExceptionEventArgs.Cancel = true;
-                }
-            });
+        //        if (MessageBox.Show(sb.ToString(), "Ping failed", MessageBoxButton.YesNo, MessageBoxImage.Warning) ==
+        //            MessageBoxResult.No)
+        //        {
+        //            pingExceptionEventArgs.Cancel = true;
+        //        }
+        //    });
 
-            if (pingExceptionEventArgs.Cancel)
-            {
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    if (_ds.Collection.Count > 0)
-                    {
-                        BtnPause_OnClick(null, null);
-                    }
-                    else
-                    {
-                        BtnStop_OnClick(null,null);
-                    }
-                }));
-            }
-        }
+        //    if (pingExceptionEventArgs.Cancel)
+        //    {
+        //        Dispatcher.BeginInvoke(new Action(() =>
+        //        {
+        //            if (_ds.Collection.Count > 0)
+        //            {
+        //                BtnPause_OnClick(null, null);
+        //            }
+        //            else
+        //            {
+        //                BtnStop_OnClick(null,null);
+        //            }
+        //        }));
+        //    }
+        //}
 
         private void PingOnPingTick(object sender, PingTickEventArgs pingTickEventArgs)
         {
